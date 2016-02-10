@@ -1,1 +1,1 @@
-task 'bench', 'benchmark ck with coffeekup', -> require './benchmark'
+task 'bench', 'benchmark ck with coffeekup', -> (require './benchmark')()
