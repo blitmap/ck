@@ -1,7 +1,5 @@
 #[coffeekup](http://github.com/mauricemach/coffeekup) rewrite
 
-fs = require 'fs'
-
 doctypes =
   '1.1':          '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">'
   '5':            '<!DOCTYPE html>'
@@ -84,10 +82,6 @@ for tag in tagsNormal
   compileTag tag, false # don't self close
 for tag in tagsSelfClosing
   compileTag tag, true # self close
-
-@compileFile = (path) ->
-  code = fs.readFileSync path, 'utf8'
-  @compile code
 
 @compile = (code) ->
   code = code.toString().replace 'function () ', ''
