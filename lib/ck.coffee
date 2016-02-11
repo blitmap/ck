@@ -1,6 +1,5 @@
 #[coffeekup](http://github.com/mauricemach/coffeekup) rewrite
 
-cs = require 'coffee-script'
 fs = require 'fs'
 
 doctypes =
@@ -91,11 +90,8 @@ for tag in tagsSelfClosing
   @compile code
 
 @compile = (code) ->
-  code =
-    if typeof code is 'function'
-      code.toString().replace 'function () ', ''
-    else
-      cs.compile code, bare: true
+  code = code.toString().replace 'function () ', ''
+
   fn = Function 'scope', "with (scope) { #{code} }"
   (_options) ->
     options = _options
