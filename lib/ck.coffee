@@ -17,20 +17,34 @@ html = null
 
 options = {}
 
+makeIsType = (typename, constructor) -> (x) -> typeof x is typename or x instanceof constructor
+isString   = makeIsType 'string', String
+isFunction = makeIsType 'function', Function
+isBoolean  = makeIsType 'boolean', Boolean
+
+escapeXML = (str) ->
+  str.replace /[&<>"']/g, (c) ->
+    switch c
+      when '&' then '&amp;'
+      when '<' then '&lt;'
+      when '>' then '&gt;'
+      when '"' then '&quot;'
+      when "'" then '&#39;'
+
 nest = (arg) ->
-  if typeof arg is 'function'
+  if isFunction arg
     arg = arg.call options.context
 
-  if typeof arg is 'string'
+  if isString arg
     html += if options.autoescape then scope.esc arg else arg
 
 compileTag = (tag, selfClosing) ->
   scope[tag] = (args...) ->
     html += "<#{tag}"
 
-    if typeof args[0] is 'object'
+    if args[0]? and typeof args[0] is 'object'
       for key, val of args.shift()
-        if typeof val is 'boolean'
+        if isBoolean val
           html += " #{key}" if val is true
         else
           html += " #{key}=\"#{val}\""
@@ -56,13 +70,7 @@ scope =
     html += doctypes[key]
     return
   esc: (str) ->
-    str.replace /[&<>"']/g, (c) ->
-      switch c
-        when '&' then '&amp;'
-        when '<' then '&lt;'
-        when '>' then '&gt;'
-        when '"' then '&quot;'
-        when "'" then '&#39;'
+    return escapeXML str
   ie: (expr, arg) ->
     html += "<!--[if #{expr}]>#{nest arg}<![endif]-->"
     return
