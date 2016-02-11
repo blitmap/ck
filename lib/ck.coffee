@@ -20,7 +20,6 @@ options = {}
 makeIsType = (typename, constructor) -> (x) -> typeof x is typename or x instanceof constructor
 isString   = makeIsType 'string', String
 isFunction = makeIsType 'function', Function
-isBoolean  = makeIsType 'boolean', Boolean
 
 escapeXML = (str) ->
   str.replace /[&<>"']/g, (c) ->
@@ -43,11 +42,9 @@ compileTag = (tag, selfClosing) ->
     html += "<#{tag}"
 
     if args[0]? and typeof args[0] is 'object'
-      for key, val of args.shift()
-        if isBoolean val
-          html += " #{key}" if val is true
-        else
-          html += " #{key}=\"#{val}\""
+      # truthyness test that includes +0, -0, NaN, ''
+      for attr, val of args.shift() when val? and val isnt false
+        html += " #{attr}=\"#{val}\""
 
     html += ">"
 
