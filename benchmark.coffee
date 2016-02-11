@@ -29,11 +29,12 @@ benchmark = (name, fn) ->
 
   console.log "#{name}: #{end - start}ms"
 
-title = 'my first website!'
-posts = []
+context =
+  title: 'my first website!'
+  posts: []
 
 module.exports = ->
-  benchmark 'ck',        -> ck_template        context: { title, posts }
-  benchmark 'coffeekup', -> coffeekup_template { title, posts }
+  benchmark 'ck',        -> ck_template        context
+  benchmark 'coffeekup', -> coffeekup_template context
 
 module.exports() if require.main is module

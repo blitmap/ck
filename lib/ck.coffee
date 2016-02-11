@@ -15,7 +15,7 @@ tagsSelfClosing = 'area base basefont br col frame hr img input link meta param'
 
 html = null
 
-options = {}
+context = {}
 
 makeIsType = (typename, constructor) -> (x) -> typeof x is typename or x instanceof constructor
 isString   = makeIsType 'string', String
@@ -32,10 +32,11 @@ escapeXML = (str) ->
 
 nest = (arg) ->
   if isFunction arg
-    arg = arg.call options.context
+    arg = arg.call context
 
   if isString arg
-    html += if options.autoescape then scope.esc arg else arg
+    html += arg
+#    html += if options.autoescape then scope.esc arg else arg
 
 compileTag = (tag, selfClosing) ->
   scope[tag] = (args...) ->
@@ -81,8 +82,8 @@ for tag in tagsSelfClosing
   code = code.toString().replace 'function () ', ''
 
   fn = Function 'scope', "with (scope) { #{code} }"
-  (_options) ->
-    options = _options
+  (_context) ->
+    context = _context
     html    = ''
-    fn.call options.context, scope
+    fn.call _context, scope
     html
