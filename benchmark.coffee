@@ -33,9 +33,7 @@ title = 'my first website!'
 posts = []
 
 module.exports = ->
-  benchmark 'ck',                 -> ck_template        context: { title, posts }
-  benchmark 'ck (format)',        -> ck_template        context: { title, posts }, format: true
-  benchmark 'coffeekup',          -> coffeekup_template { title, posts }
-  benchmark 'coffeekup (format)', -> coffeekup_template { title, posts, format: true }
+  benchmark 'ck',        -> ck_template        context: { title, posts }
+  benchmark 'coffeekup', -> coffeekup_template { title, posts }
 
 module.exports() if require.main is module
